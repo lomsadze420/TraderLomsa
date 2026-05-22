@@ -1,9 +1,9 @@
 /* TraderLomsa Premium — Trading Journal */
 
-// Paste your Supabase project credentials here (Project Settings → API)
-const SUPABASE_URL = '';
-const SUPABASE_ANON_KEY = '';
-
+// Supabase → Integrations → Data API → copy URL but REMOVE "/rest/v1/" at the end!
+// Example: use https://xxx.supabase.co  (NOT .../rest/v1/)
+const SUPABASE_URL = 'https://yphxpxlvwlwznksmlgly.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_AkaU3RRXUtzSMrvzJ76-Fw_qRny7gex';
 const STORAGE_TRADES = 'tradingJournalTrades';
 const STORAGE_ACCOUNTS = 'tradingJournalAccounts';
 const STORAGE_STRATEGIES = 'tradingJournalStrategies';
@@ -125,13 +125,33 @@ function isLegacyDefaultStrategy(name) {
 }
 
 function isCloudEnabled() {
-  return Boolean(SUPABASE_URL && SUPABASE_ANON_KEY && supabase && cloudReady && currentUser);
+  return Boolean(isCloudConfigured() && supabase && cloudReady && currentUser);
+}
+
+function sanitizeSupabaseConfig() {
+  let url = String(SUPABASE_URL || '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+  url = url.replace(/\/rest\/v1\/?$/i, '').replace(/\/+$/, '');
+  return {
+    url,
+    key: String(SUPABASE_ANON_KEY || '').trim(),
+  };
+}
+
+function isCloudConfigured() {
+  const { url, key } = sanitizeSupabaseConfig();
+  return Boolean(url && key);
 }
 
 function initSupabaseClient() {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY || !window.supabase) return false;
-  supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  return true;
+  const { url, key } = sanitizeSupabaseConfig();
+  if (!url || !key || !window.supabase) return false;
+  try {
+    supabase = window.supabase.createClient(url, key);
+    return true;
+  } catch (err) {
+    console.error('Supabase init failed:', err);
+    return false;
+  }
 }
 
 function queueCloudSave(task) {
@@ -395,6 +415,11 @@ function hideAuthModal() {
   $('#auth-error')?.classList.add('hidden');
 }
 
+function updateCloudAuthUI(signedIn) {
+  $('#btn-cloud-signin')?.classList.toggle('hidden', signedIn || !isCloudConfigured());
+  $('#btn-sign-out')?.classList.toggle('hidden', !signedIn);
+}
+
 function setAuthError(msg) {
   const el = $('#auth-error');
   if (!el) return;
@@ -424,21 +449,27 @@ async function onAuthSession(user) {
   currentUser = user;
   cloudReady = Boolean(user);
   if (!user) {
-    showAuthModal();
-    $('#btn-sign-out')?.classList.add('hidden');
-    updateSyncStatus('Sign in to enable cloud sync');
+    hideAuthModal();
+    updateCloudAuthUI(false);
+    updateSyncStatus('Sign in for cloud sync (optional)');
     return;
   }
 
   hideAuthModal();
-  $('#btn-sign-out')?.classList.remove('hidden');
-  await loadAllFromCloud();
-  await migrateLocalStorageToCloud();
-  syncStrategiesFromTrades();
-  populateAccountFilter();
-  populateStrategySelect();
-  renderCurrentView();
-  updateSyncStatus(`Synced · ${user.email}`);
+  updateCloudAuthUI(true);
+  try {
+    await loadAllFromCloud();
+    await migrateLocalStorageToCloud();
+    syncStrategiesFromTrades();
+    populateAccountFilter();
+    populateStrategySelect();
+    renderCurrentView();
+    updateSyncStatus(`Synced · ${user.email}`);
+  } catch (err) {
+    console.error(err);
+    alert(`Cloud load failed: ${err.message}. Using local data on this device.`);
+    updateSyncStatus('Cloud error — using local data');
+  }
 }
 
 function finishAppInit() {
@@ -454,39 +485,45 @@ function finishAppInit() {
 }
 
 async function bootstrapApp() {
-  trades = loadTradesLocal().map(normalizeTrade);
-  accounts = loadAccountsLocal();
-  strategies = loadStrategiesLocal();
-  syncStrategiesFromTrades(false);
+  try {
+    trades = loadTradesLocal().map(normalizeTrade);
+    accounts = loadAccountsLocal();
+    strategies = loadStrategiesLocal();
+    syncStrategiesFromTrades(false);
 
-  if (!initSupabaseClient()) {
-    updateSyncStatus('Local mode — add Supabase keys in app.js');
     finishAppInit();
-    return;
-  }
 
-  const { data: { session } } = await supabase.auth.getSession();
-  if (session?.user) {
-    await onAuthSession(session.user);
-  } else if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-    showAuthModal();
-    updateSyncStatus('Sign in to sync across devices');
-  }
+    if (!initSupabaseClient()) {
+      updateSyncStatus('Local mode — add Supabase keys in app.js');
+      return;
+    }
 
-  supabase.auth.onAuthStateChange(async (_event, session) => {
+    updateCloudAuthUI(false);
+
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) console.warn('Auth session error:', error.message);
+
     if (session?.user) {
       await onAuthSession(session.user);
-      if (!appInitialized) finishAppInit();
-    } else if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-      currentUser = null;
-      cloudReady = false;
-      showAuthModal();
-      $('#btn-sign-out')?.classList.add('hidden');
-      updateSyncStatus('Signed out');
+    } else {
+      updateSyncStatus('Tap “Sign In” in sidebar for cloud sync');
     }
-  });
 
-  finishAppInit();
+    supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        await onAuthSession(session.user);
+      } else {
+        currentUser = null;
+        cloudReady = false;
+        updateCloudAuthUI(false);
+        updateSyncStatus('Signed out — local data on this device');
+      }
+    });
+  } catch (err) {
+    console.error('Bootstrap failed:', err);
+    finishAppInit();
+    updateSyncStatus('App loaded in local mode');
+  }
 }
 
 // Legacy aliases
@@ -2374,5 +2411,9 @@ $('#btn-sign-out')?.addEventListener('click', async () => {
   if (!supabase) return;
   await handleSignOut();
 });
+
+$('#btn-cloud-signin')?.addEventListener('click', () => showAuthModal());
+
+$('#auth-skip')?.addEventListener('click', () => hideAuthModal());
 
 bootstrapApp();
