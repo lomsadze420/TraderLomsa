@@ -164,7 +164,7 @@ body {
   backdrop-filter: blur(8px);
 }
 
-.modal-overlay.hidden { display: none; }
+.modal-overlay.hidden { display: none !important; pointer-events: none !important; }
 
 .modal-panel {
   animation: modalIn 0.25s ease;
@@ -702,7 +702,7 @@ body {
   font-size: 0.75rem;
 }
 
-/* ——— Sydview Dashboard ——— */
+/* â€”â€”â€” Sydview Dashboard â€”â€”â€” */
 
 .dash-hero {
   display: grid;
