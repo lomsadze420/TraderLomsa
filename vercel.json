@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "name": "traderlomsa",
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
