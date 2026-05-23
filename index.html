@@ -40,6 +40,453 @@
     .modal-overlay.is-open{display:flex!important;pointer-events:auto!important}
     main > .absolute { pointer-events: none !important; }
   </style>
+  <link rel="stylesheet" href="styles.css?v=6" />
+</head>
+<body class="h-full bg-void text-zinc-100 antialiased overflow-hidden">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-[240px] shrink-0 flex flex-col border-r border-glass-border bg-[#0a0a14]/90 backdrop-blur-xl">
+      <div class="p-5 border-b border-glass-border">
+        <button type="button" id="brand-home" class="flex items-center gap-3 w-full text-left rounded-xl hover:bg-purple-500/10 transition p-1 -m-1" title="Go to Dashboard">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/30 to-purple-900/20 border border-purple-500/40 flex items-center justify-center shadow-glow-purple shrink-0">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+          </div>
+          <div>
+            <p class="font-semibold text-sm tracking-tight text-purple-100">TraderLomsa</p>
+            <p class="text-[10px] text-zinc-500">Premium Journal</p>
+          </div>
+        </button>
+      </div>
+
+      <nav class="flex-1 p-3 space-y-1">
+        <button type="button" data-view="dashboard" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
+          Dashboard
+        </button>
+        <button type="button" data-view="journal" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-zinc-200 transition">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+          Journal
+        </button>
+        <button type="button" data-view="calendar" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-zinc-200 transition">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+          Calendar
+        </button>
+        <button type="button" data-view="statistics" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-zinc-200 transition">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          Statistics
+        </button>
+        <button type="button" data-view="achievements" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-zinc-200 transition">
+          <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
+          Achievements
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-glass-border space-y-2">
+        <p id="cloud-sync-status" class="text-[10px] text-zinc-500 text-center px-1 leading-relaxed hidden"></p>
+        <button type="button" id="btn-cloud-signin" class="hidden w-full py-2 rounded-full text-xs text-purple-300 border border-purple-500/30 hover:bg-purple-500/10 transition">
+          Sign In (Cloud Sync)
+        </button>
+        <button type="button" id="btn-sign-out" class="hidden w-full py-2 rounded-full text-xs text-zinc-500 border border-glass-border hover:border-red-500/30 hover:text-red-300 transition">
+          Sign Out
+        </button>
+        <button type="button" id="btn-add-trade" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white text-sm font-semibold shadow-glow-purple transition active:scale-[0.98] flex items-center justify-center gap-2">
+          <span class="text-lg leading-none">+</span> Add Trade
+        </button>
+        <button type="button" id="btn-manage-accounts" class="w-full py-2 rounded-lg text-xs text-zinc-500 border border-glass-border hover:border-purple-500/30 hover:text-purple-300 transition">
+          Manage Accounts
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <div class="absolute inset-0 bg-gradient-to-br from-purple-950/20 via-void to-void pointer-events-none"></div>
+      <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+      <header class="relative shrink-0 px-8 py-5 flex items-center justify-between border-b border-glass-border/80">
+        <div>
+          <h1 id="page-title" class="text-xl font-semibold tracking-tight">Dashboard</h1>
+          <p id="page-subtitle" class="text-xs text-zinc-500 mt-0.5">Your trading overview</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="export-json" class="btn-ghost text-xs">Export JSON</button>
+          <button type="button" id="export-csv" class="btn-ghost text-xs">Export CSV</button>
+          <button type="button" id="import-json" class="btn-ghost text-xs">Import</button>
+          <input type="file" id="import-file" class="hidden" />
+        </div>
+      </header>
+
+      <div id="view-container" class="relative flex-1 overflow-y-auto scrollbar-thin px-8 py-6">
+        <!-- Dashboard -->
+        <section id="view-dashboard" class="view-panel space-y-5 max-w-[1500px]">
+          <div class="dash-hero">
+            <div class="dash-welcome">
+              <h2 class="dash-welcome-title">Welcome back, Lomsa! 👋</h2>
+              <p class="dash-welcome-date" id="dash-welcome-date">
+                <svg class="dash-welcome-date-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                <span id="dash-welcome-date-text"></span>
+              </p>
+            </div>
+            <div class="dash-inspiration-card">
+              <p class="dash-inspiration-label">✨ Daily Inspiration ✨</p>
+              <p class="dash-inspiration-text">Do not overtrade today — tomorrow is a new session.</p>
+            </div>
+          </div>
+
+          <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+            <div class="dash-stat-card dash-stat-card--pnl" id="stat-card-profit">
+              <div class="dash-stat-head">
+                <span class="dash-stat-label">Total P&amp;L</span>
+                <span class="dash-stat-icon dash-stat-icon--red">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+                </span>
+              </div>
+              <p id="dash-profit" class="dash-stat-value">$0.00</p>
+              <div class="dash-stat-foot">
+                <span id="dash-pnl-delta" class="dash-delta">0%</span>
+                <canvas id="spark-profit" class="dash-spark" width="110" height="40"></canvas>
+              </div>
+            </div>
+            <div class="dash-stat-card dash-stat-card--wr">
+              <div class="dash-stat-head">
+                <span class="dash-stat-label">Win Rate</span>
+                <span class="dash-stat-icon dash-stat-icon--purple">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </span>
+              </div>
+              <p id="dash-winrate" class="dash-stat-value">0.0%</p>
+              <div class="dash-stat-foot">
+                <span id="dash-wr-delta" class="dash-delta dash-delta--up">+0%</span>
+                <canvas id="spark-winrate" class="dash-spark" width="110" height="40"></canvas>
+              </div>
+            </div>
+            <div class="dash-stat-card dash-stat-card--trades">
+              <div class="dash-stat-head">
+                <span class="dash-stat-label">Total Trades</span>
+                <span class="dash-stat-icon dash-stat-icon--teal">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"/></svg>
+                </span>
+              </div>
+              <p id="dash-total" class="dash-stat-value">0</p>
+              <div class="dash-stat-foot">
+                <span id="dash-trades-sub" class="dash-stat-sub">0 closed</span>
+                <canvas id="spark-trades" class="dash-spark" width="110" height="40"></canvas>
+              </div>
+            </div>
+            <div class="dash-stat-card dash-stat-card--avg">
+              <div class="dash-stat-head">
+                <span class="dash-stat-label">Avg Win/Loss</span>
+                <span class="dash-stat-icon dash-stat-icon--orange">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </span>
+              </div>
+              <p id="dash-avg-winloss" class="dash-stat-value dash-stat-value--sm">$0 / $0</p>
+              <div class="dash-stat-foot">
+                <span id="dash-rr-hint" class="dash-stat-sub dash-stat-sub--orange">Review R:R</span>
+                <canvas id="spark-avg" class="dash-spark" width="110" height="40"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid xl:grid-cols-[1fr_340px] gap-5">
+            <div class="glass-card rounded-2xl p-5 sm:p-6 dash-chart-card">
+              <div class="flex flex-wrap items-start justify-between gap-4 mb-5">
+                <div>
+                  <h3 class="text-base font-semibold text-zinc-100">Performance Overview</h3>
+                  <p id="dash-chart-subtitle" class="text-xs text-zinc-500 mt-0.5 font-medium">Your cumulative P&amp;L over time</p>
+                </div>
+                <div class="flex gap-1 p-1 rounded-full bg-black/30 border border-white/5" id="dash-range-pills">
+                  <button type="button" data-chart-range="7" class="dash-range-pill">7D</button>
+                  <button type="button" data-chart-range="30" class="dash-range-pill active">30D</button>
+                  <button type="button" data-chart-range="90" class="dash-range-pill">90D</button>
+                  <button type="button" data-chart-range="365" class="dash-range-pill">1Y</button>
+                </div>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-4" id="dash-mode-pills">
+                <button type="button" data-chart-mode="equity" class="dash-mode-pill active">EquityCurve</button>
+                <button type="button" data-chart-mode="winrate" class="dash-mode-pill">WinRate</button>
+                <button type="button" data-chart-mode="daily" class="dash-mode-pill">DailyP&amp;L</button>
+              </div>
+              <div class="dash-main-chart-wrap">
+                <canvas id="dash-main-chart" width="900" height="320"></canvas>
+              </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 sm:p-6 dash-score-card">
+              <div class="flex items-center justify-between mb-1">
+                <h3 class="text-base font-semibold text-zinc-100">Performance Score</h3>
+                <span class="text-zinc-600 cursor-help" title="Composite score from your trading metrics">ⓘ</span>
+              </div>
+              <p class="text-xs text-zinc-500 font-medium mb-4">Your trading metrics</p>
+              <div class="dash-radar-wrap">
+                <canvas id="dash-radar-chart" width="300" height="260"></canvas>
+              </div>
+              <div class="dash-score-footer">
+                <p class="dash-score-label">YOUR PERFORMANCE SCORE</p>
+                <p id="dash-perf-score" class="dash-score-value">0.00</p>
+                <div class="dash-score-bar"><span id="dash-score-bar-fill" style="width:0%"></span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Journal -->
+        <section id="view-journal" class="view-panel hidden space-y-5 max-w-[1600px]">
+          <div class="flex flex-wrap gap-2 items-center">
+            <select id="filter-account" class="filter-chip"></select>
+            <select id="filter-market" class="filter-chip">
+              <option value="">All Markets</option>
+              <option value="MNQ">MNQ</option>
+              <option value="MES">MES</option>
+              <option value="MYM">MYM</option>
+            </select>
+            <select id="filter-status" class="filter-chip">
+              <option value="">All Status</option>
+              <option value="WIN">WIN</option>
+              <option value="LOSS">LOSS</option>
+              <option value="BE">BE</option>
+              <option value="Partial-Loss">Partial-Loss</option>
+              <option value="Partial-BE">Partial-BE</option>
+            </select>
+            <input type="search" id="filter-search" placeholder="Search..." class="filter-chip w-44" />
+          </div>
+          <div id="journal-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4"></div>
+          <div id="journal-empty" class="hidden glass-card rounded-2xl p-16 text-center">
+            <p class="text-zinc-400">No trades yet</p>
+            <button type="button" class="mt-4 text-purple-400 text-sm hover:text-purple-300" onclick="document.getElementById('btn-add-trade').click()">+ Add Trade</button>
+          </div>
+        </section>
+
+        <!-- Calendar -->
+        <section id="view-calendar" class="view-panel hidden max-w-[1200px]">
+          <div class="flex items-center justify-between mb-6">
+            <button type="button" id="cal-prev" class="btn-ghost px-3">←</button>
+            <h2 id="cal-month-label" class="text-lg font-semibold"></h2>
+            <button type="button" id="cal-next" class="btn-ghost px-3">→</button>
+          </div>
+          <div class="glass-card rounded-2xl p-5">
+            <div class="grid grid-cols-7 gap-2 mb-2 text-center text-[10px] text-zinc-500 uppercase">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div id="cal-grid" class="grid grid-cols-7 gap-2"></div>
+          </div>
+        </section>
+
+        <!-- Statistics -->
+        <section id="view-statistics" class="view-panel hidden space-y-5 max-w-[1200px]">
+          <div class="grid sm:grid-cols-2 gap-4" id="stats-best-worst-days"></div>
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4" id="stats-grid"></div>
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="text-sm font-semibold mb-4">Win Rate by Strategy</h3>
+            <div id="stats-by-strategy" class="space-y-3"></div>
+          </div>
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="text-sm font-semibold mb-4">Status Breakdown</h3>
+            <div id="stats-by-status" class="flex flex-wrap gap-3"></div>
+          </div>
+          <div class="glass-card rounded-2xl p-6">
+            <h3 class="text-sm font-semibold mb-4">Market Performance</h3>
+            <div id="stats-by-market" class="space-y-3"></div>
+          </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="view-achievements" class="view-panel hidden max-w-[1000px]">
+          <p class="text-sm text-zinc-500 mb-6">Unlocked achievements and progress</p>
+          <div id="achievements-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Trade Modal -->
+  <div id="trade-modal" class="modal-overlay hidden">
+    <div class="modal-panel glass-card rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col mx-4 shadow-glow-purple">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-glass-border shrink-0">
+        <h2 id="trade-modal-title" class="text-lg font-semibold">Add Trade</h2>
+        <button type="button" id="trade-modal-close" class="text-zinc-500 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form id="trade-form" class="flex-1 overflow-y-auto scrollbar-thin px-6 py-5 space-y-5">
+        <div class="glass-inset rounded-xl p-4 space-y-3">
+          <p class="text-[10px] uppercase tracking-wider text-purple-400/80 font-semibold">Account & Asset</p>
+          <div class="grid grid-cols-3 gap-3">
+            <div><label class="lbl">Account</label><select id="f-account" required class="inp"></select></div>
+            <div><label class="lbl">Market</label><select id="f-market" class="inp"><option>MNQ</option><option>MES</option><option>MYM</option></select></div>
+            <div><label class="lbl">Type</label>
+              <div class="grid grid-cols-2 gap-1.5 mt-1">
+                <label class="type-btn"><input type="radio" name="direction" value="Long" checked class="sr-only"/><span>Long</span></label>
+                <label class="type-btn"><input type="radio" name="direction" value="Short" class="sr-only"/><span>Short</span></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="lbl">Date</label><input type="date" id="f-date" required class="inp w-full" /></div>
+          <div><label class="lbl">Day of Week</label><select id="f-day" class="inp w-full">
+            <option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option>
+          </select></div>
+          <div><label class="lbl">Entry Time</label><input type="time" id="f-entry" class="inp w-full" /></div>
+          <div><label class="lbl">Exit Time</label><input type="time" id="f-exit" class="inp w-full" /></div>
+          <div><label class="lbl">Session</label><select id="f-session" class="inp w-full"><option>NY AM</option><option>NY PM</option><option>London</option></select></div>
+          <div>
+            <label class="lbl">Strategy</label>
+            <div class="flex gap-2 mt-1 items-stretch">
+              <select id="f-strategy" class="inp flex-1"></select>
+              <div class="flex gap-1.5 shrink-0">
+                <button type="button" id="btn-remove-strategy" class="strategy-action-btn strategy-action-btn--danger" title="Remove selected strategy" aria-label="Remove selected strategy">−</button>
+                <button type="button" id="btn-toggle-strategy" class="strategy-action-btn" title="Add new strategy" aria-label="Add new strategy">+</button>
+              </div>
+            </div>
+            <div id="strategy-add-panel" class="hidden flex gap-2 mt-2">
+              <input type="text" id="new-strategy-name" class="inp flex-1 text-sm" placeholder="09:30 manipulation, continuation..." />
+              <button type="button" id="btn-save-strategy" class="px-4 py-2 rounded-full bg-purple-600 text-xs font-semibold shrink-0 hover:bg-purple-500 transition">Add</button>
+            </div>
+          </div>
+          <div><label class="lbl">Quantity</label><input type="number" id="f-quantity" min="1" step="1" value="1" required class="inp w-full font-mono" placeholder="1" /></div>
+        </div>
+
+        <div class="glass-inset rounded-xl p-4 space-y-3">
+          <p class="text-[10px] uppercase tracking-wider text-purple-400/80 font-semibold">Risk & P&L</p>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="lbl">Risked ($)</label><input type="number" id="f-risked" step="0.01" min="0.01" required class="inp w-full font-mono" /></div>
+            <div><label class="lbl">Profit/Loss ($)</label><input type="number" id="f-pnl" step="0.01" required class="inp w-full font-mono" /></div>
+          </div>
+          <div class="flex items-center justify-between gap-4">
+            <div class="flex-1">
+              <label class="lbl mb-2 block">Status</label>
+              <div id="status-pills" class="flex flex-wrap gap-2"></div>
+            </div>
+            <div class="text-right shrink-0">
+              <label class="lbl">Realized R:R</label>
+              <p id="f-rr" class="font-mono text-2xl font-bold text-purple-300 mt-1">1 : —</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-inset rounded-xl p-4">
+          <label class="lbl mb-2 block">Trading Psychology</label>
+          <div id="emotion-pills" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <div class="glass-inset rounded-xl p-4">
+          <div class="flex justify-between items-center mb-2">
+            <label class="lbl">News</label>
+            <button type="button" id="news-clear" class="text-[10px] text-zinc-500 hover:text-purple-400">Clear</button>
+          </div>
+          <div id="news-selected" class="flex flex-wrap gap-1.5 mb-2 min-h-[20px]"></div>
+          <div id="news-pills" class="flex flex-wrap gap-1.5 max-h-28 overflow-y-auto scrollbar-thin"></div>
+        </div>
+
+        <div class="glass-inset rounded-xl p-4">
+          <label class="lbl mb-2 block">Chart Screenshots</label>
+          <div id="chart-dropzone" class="chart-dropzone" tabindex="0">
+            <input type="file" id="f-chart-file" accept="image/*" multiple class="sr-only" />
+            <div id="chart-drop-placeholder">
+              <p class="text-sm text-zinc-400">Drag & drop · Click · Ctrl+V / Cmd+V</p>
+              <p class="text-[10px] text-zinc-600 mt-1">Multiple images — each paste adds a new one</p>
+            </div>
+          </div>
+          <div id="form-photos-grid" class="form-photos-grid mt-3"></div>
+        </div>
+        <div>
+          <label class="lbl">Trade Analysis / Notes</label>
+          <textarea id="f-notes" name="tradeNotes" rows="4" class="inp w-full resize-y min-h-[96px]" placeholder="Detailed analysis — what you saw, what you did..."></textarea>
+        </div>
+
+        <button type="submit" id="trade-submit-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 font-semibold text-sm shadow-glow-purple">Save Trade</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Accounts modal -->
+  <div id="accounts-modal" class="modal-overlay hidden">
+    <div class="glass-card rounded-2xl w-full max-w-md p-6 mx-4">
+      <div class="flex justify-between mb-4"><h3 class="font-semibold">Manage Accounts</h3><button type="button" id="accounts-close" class="text-zinc-500">✕</button></div>
+      <div class="flex gap-2 mb-4">
+        <input type="text" id="new-account" class="inp flex-1" placeholder="Takeprofit 50k" />
+        <button type="button" id="add-account" class="px-4 py-2 rounded-lg bg-purple-600 text-sm font-medium">Add</button>
+      </div>
+      <ul id="accounts-list" class="space-y-2 max-h-48 overflow-y-auto"></ul>
+    </div>
+  </div>
+
+  <!-- Trade detail modal -->
+  <div id="detail-modal" class="modal-overlay hidden">
+    <div class="modal-panel glass-card rounded-2xl w-full max-w-5xl max-h-[94vh] overflow-hidden flex flex-col mx-4 shadow-glow-purple">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-glass-border shrink-0">
+        <h2 class="text-lg font-semibold">Trade Details</h2>
+        <button type="button" id="detail-modal-close" class="text-zinc-500 hover:text-white p-1">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div id="detail-content" class="flex-1 overflow-y-auto scrollbar-thin px-6 py-5"></div>
+    </div>
+  </div>
+
+  <!-- Cloud sign-in -->
+  <div id="auth-modal" class="modal-overlay hidden">
+    <div class="glass-card rounded-2xl w-full max-w-md p-6 mx-4 shadow-glow-purple">
+      <div class="text-center mb-5">
+        <p class="text-xs font-semibold uppercase tracking-wider text-purple-300">Cloud Sync</p>
+        <h3 class="text-xl font-bold mt-1">Sign in to TraderLomsa</h3>
+        <p class="text-sm text-zinc-500 mt-2">Sync trades, charts &amp; strategies across phone and desktop.</p>
+      </div>
+      <form id="auth-form" class="space-y-3">
+        <div>
+          <label class="lbl" for="auth-email">Email</label>
+          <input type="email" id="auth-email" required class="inp w-full mt-1" placeholder="you@email.com" autocomplete="email" />
+        </div>
+        <div>
+          <label class="lbl" for="auth-password">Password</label>
+          <input type="password" id="auth-password" required minlength="6" class="inp w-full mt-1" placeholder="Min. 6 characters" autocomplete="current-password" />
+        </div>
+        <p id="auth-error" class="text-xs text-red-400 hidden"></p>
+        <button type="submit" id="auth-sign-in" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-purple-500 font-semibold text-sm shadow-glow-purple">Sign In</button>
+        <button type="button" id="auth-sign-up" class="w-full py-2.5 rounded-xl border border-purple-500/40 text-purple-300 text-sm font-semibold hover:bg-purple-500/10 transition">Create Account</button>
+        <button type="button" id="auth-skip" class="w-full py-2 text-xs text-zinc-500 hover:text-zinc-300 transition">Continue without cloud sync</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Chart lightbox -->
+  <div id="chart-lightbox" class="modal-overlay hidden">
+    <button type="button" id="lightbox-close" class="absolute top-6 right-6 text-zinc-400 hover:text-white z-10">✕ Close</button>
+    <img id="lightbox-img" class="max-w-[95vw] max-h-[90vh] rounded-xl border border-glass-border shadow-2xl object-contain" alt="Chart" />
+  </div>
+
+  <script>
+    (function () {
+      ['auth-modal', 'trade-modal', 'accounts-modal', 'detail-modal', 'chart-lightbox'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('hidden');
+        el.style.display = 'none';
+        el.style.pointerEvents = 'none';
+      });
+      document.querySelectorAll('.view-panel').forEach(function (el) {
+        var active = el.id === 'view-dashboard';
+        el.classList.toggle('is-active', active);
+        el.classList.toggle('hidden', !active);
+      });
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js?v=6"></script>
+</body>
+</html>
+    .view-panel { display: none !important; }
+    .view-panel.is-active { display: block !important; }
+    #auth-modal,#trade-modal,#accounts-modal,#detail-modal,#chart-lightbox{display:none!important;pointer-events:none!important}
+    .modal-overlay.is-open{display:flex!important;pointer-events:auto!important}
+    main > .absolute { pointer-events: none !important; }
+  </style>
   <link rel="stylesheet" href="styles.css?v=5" />
 </head>
 <body class="h-full bg-void text-zinc-100 antialiased overflow-hidden">
